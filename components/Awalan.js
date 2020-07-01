@@ -10,21 +10,27 @@ export default class Awalan extends Component{
   return (
     <View style={styles.container}>
     <ImageBackground source={require('../src/BG.png')} style={styles.backgroundimage}>
-    <View style={{flex:2}}>
+    <Image source={require('../src/humaaans.png')} style={{
+    height: 600,
+    width: 450,
+    position: 'relative',
+    top: 280,
+    }}/>
+    <View style={{flex:1}}>
     <Image source={require('../src/logoo.png')} style={{
     height: 100,
     width: 250,
     position: 'relative',
-    top: 250,
-    left: 80,
+    bottom: 400,
+    left: 45,
     }}/>
     <Image source={require('../src/LPP.png')} style={{
       resizeMode: 'contain', 
       width: 80, 
       height: 80, 
       position: 'relative',
-      top: 50,
-      alignSelf: 'center'
+      alignSelf: 'center',
+      bottom: 600,
       }}></Image>
       <SafeAreaView style={{
             width : 250,
@@ -60,8 +66,8 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: 'black',
     position: 'relative',
-    top: 120,
-    left: 100,
+    bottom: 520,
+    left: 80,
     fontFamily: 'sans-serif-thin'
   },
   buton:{
@@ -69,10 +75,10 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 30,
     alignItems: 'center',
-    alignSelf: 'flex-end',
-    marginRight: 50,
-    marginBottom: 80,
+    alignSelf: 'center',
     backgroundColor: 'white',
+    position: 'relative',
+    bottom: 80,
   },
   backgroundimage: {
     flex: 1,

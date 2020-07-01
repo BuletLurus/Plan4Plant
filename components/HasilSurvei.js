@@ -1,9 +1,38 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, ImageBackground ,TouchableOpacity,} from 'react-native';
+import { StyleSheet, Text, View, Image, ImageBackground ,TouchableOpacity, ListView,FlatList, Platform} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon } from 'native-base';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 export default class HasilSurvei extends Component {
+    constructor(props){
+        super(props);
+        this.state ={
+          ph:this.props.navigation.state.params.ph,
+          suhu:this.props.navigation.state.params.suhu,
+          musim:this.props.navigation.state.params.musim
+        }
+      }
+      componentDidMount(){
+        return fetch('http://192.168.1.2:8000/api/hasil?ph='+this.state.ph+'&suhu='+this.state.suhu+'&musim='+this.state.musim,{
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          }
+        })
+        .then((response)=>response.json())
+        .then((json)=> {
+            this.setState({
+                data:json.buah,
+                avail:json.avail
+            });
+          console.log(json.buah[0].gambar)
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      }
     render(){
         return (
           <View style={styles.container}>
@@ -13,56 +42,74 @@ export default class HasilSurvei extends Component {
                       color: 'white',
                       fontSize: 40,
                       position: 'relative',
-                      top : 30,
+                      top : 70,
                       right: 80, 
+                      marginBottom: 20,
                   }}>Hasil Survei</Text>
               </View>
-              <View style={styles.box}>
-                  <View>
-                      <SafeAreaView style={{
-                          backgroundColor: 'red',
-                          position: "absolute",
-                          width : 177,
-                          height: 130,
-                          top: 40,
-                          left: 40,
+              <View style={{
+                top:60,
+                }}>
+                  { this.state.avail ? null : <CustomFlat/>}
+                  {this.state.avail &&
+                    <FlatList
+                    showsVerticalScrollIndicator={false}
+                    data = {this.state.data}
+                    renderItem = {({item, index, separators}) => (
+                      <View style={{
+                        width : 250,
+                        height: 150,
+                        borderTopLeftRadius : 20,
+                        borderTopRightRadius : 20,
+                        borderBottomLeftRadius: 20,
+                        borderBottomRightRadius: 20,
+                        position: 'relative',
+                        backgroundColor: '#E2FFF9',
+                        margin: 10,
                       }}>
-                          <Text>INI BUAT PENJELASAN SINGKAT BUAH</Text>
-                      </SafeAreaView>
-                      <SafeAreaView style={{
-                          backgroundColor: 'yellow',
-                          position: 'absolute',
-                          width : 150,
-                          height: 150,
-                          left: 220,
-                          top: 30,
-                      }}><Text>INI BUAT FOTO BUAH</Text></SafeAreaView>
-                      <SafeAreaView style={{
-                          backgroundColor: 'green',
-                          position: 'absolute',
-                          width : 330,
-                          height: 350,
-                          left: 40,
-                          top: 185,
-                      }}><Text>INI BUAT PENJELASAN HASIL SURVEI</Text></SafeAreaView>
-                      <View style={styles.button}>
-                        <TouchableOpacity 
-                            onPress={() => this.props.navigation.navigate('Home')}>
-                        <Text style={{
-                            paddingVertical: 5,
-                            fontSize: 25,
-                            color: "#E2FFF9",
-                            alignSelf: 'center'
-                        }}>Selesai</Text>
+                        <TouchableOpacity
+                        onPress={() => this.props.navigation.navigate('Isi',{id:item.id})}
+                        key={item.id}
+                        >
+                            <View style={{
+                              alignItems: 'center',
+                              paddingVertical: 20,
+                              }}>
+                                
+                                <Image source={{uri:'http://192.168.1.2:8000/img/'+item.gambar}} style={{
+                                  width: 100, 
+                                  height: 100
+                                  }}/>
+                                  <Text style={{
+                                    fontWeight: 'bold',
+                                    fontSize: 16,
+                                  }}>{item.nama}</Text>
+                            </View>
                         </TouchableOpacity>
                         </View>
+                    )} 
+                    />
+                    }
                   </View>
               </View>
-          </View>
+          
         );
       }
 };
-
+const CustomFlat = () =>(  
+    <FlatList
+    data = {[{title: 'Data Tidak Ditemukan', key: 'item1'}]}
+    renderItem = {({item, index, separators}) => (
+        <TouchableHighlight
+        key={item.key}
+        >
+            <View>
+                <Text>{item.title}</Text>
+            </View>
+        </TouchableHighlight>
+    )} 
+    />
+)
 
 const styles = StyleSheet.create({
     container: {

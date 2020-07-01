@@ -6,6 +6,7 @@ import Awalan from './Awalan';
 import Beranda from './Beranda';
 import Buah from './Buah';
 import HasilSurvei from './HasilSurvei';
+import Survei from './Survei';
 
 
 const HomePage = createStackNavigator({
@@ -20,6 +21,9 @@ const HomePage = createStackNavigator({
     },
     'Hasil': {
         screen : HasilSurvei
+    },
+    'SPK' : {
+        screen : Survei
     }
 },{
     headerMode: 'none',
